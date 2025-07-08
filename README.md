@@ -1,6 +1,6 @@
 # 🎨 Vibe Coding Daily Digest
 
-Daily insights on **vibe coding** discussions across Reddit - tracking app ideas, no-code frustrations, and creative development opportunities for Crayon.
+Daily insights on **vibe coding** discussions across Reddit and Hacker News - tracking app ideas, no-code frustrations, and creative development opportunities for Crayon.
 
 ## 📅 Recent Digests
 
@@ -10,13 +10,15 @@ Daily insights on **vibe coding** discussions across Reddit - tracking app ideas
 
 ## 🎯 What We Track
 
-**Subreddits:** r/nocode, r/SideProject, r/indiehackers, r/AppIdeas, r/creativecoding, r/vibecoding, r/ClaudeAI
+**Reddit:** r/nocode, r/SideProject, r/indiehackers, r/AppIdeas, r/creativecoding, r/vibecoding, r/ClaudeAI
+
+**Hacker News:** Ask HN posts, Show HN projects, and relevant tool discussions
 
 **Focus:** Mobile app ideas, no-code pain points, "what are you working on" threads, creative coding experiments
 
 ## 🤖 Generated Daily
 
-Each morning using GPT-4o mini to analyze ~200-300 recent posts and surface the most relevant discussions for mobile-first app creation.
+Each morning using GPT-4o mini to analyze ~300-500 recent posts and surface the most relevant discussions for mobile-first app creation.
 
 ---
 
