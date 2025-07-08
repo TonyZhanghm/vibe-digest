@@ -572,6 +572,67 @@ Respond ONLY with the JSON object."""
         
         print(f"\n✅ Report saved to: {filename}")
         return filename
+    
+    def update_readme(self, new_digest_filename: str) -> None:
+        """Update README.md with the latest 3 digest links"""
+        try:
+            import glob
+            
+            # Get all existing digest files
+            digest_files = glob.glob("digests/vibe-digest-*.md")
+            digest_files.sort(reverse=True)  # Most recent first
+            
+            # Take the latest 3 (including the new one)
+            latest_digests = digest_files[:3]
+            
+            # Read current README
+            with open('README.md', 'r', encoding='utf-8') as f:
+                readme_content = f.read()
+            
+            # Build the new Recent Digests section
+            digest_lines = []
+            for digest_file in latest_digests:
+                # Extract date from filename
+                date_part = digest_file.split('vibe-digest-')[1].replace('.md', '')
+                date_obj = datetime.strptime(date_part, '%Y-%m-%d')
+                display_date = date_obj.strftime('%B %d, %Y')
+                digest_lines.append(f"- [{display_date}]({digest_file})")
+            
+            # Replace the Recent Digests section
+            lines = readme_content.split('\n')
+            new_lines = []
+            i = 0
+            
+            while i < len(lines):
+                if lines[i].strip() == "## 📅 Recent Digests":
+                    new_lines.append(lines[i])  # Keep the header
+                    new_lines.append("")
+                    
+                    # Add the latest digest links
+                    for digest_line in digest_lines:
+                        new_lines.append(digest_line)
+                    
+                    new_lines.append("")
+                    new_lines.append("*[View all digests →](https://github.com/tonyzhanghm/vibe-digest/tree/main/digests)*")
+                    
+                    # Skip until we find the next section
+                    i += 1
+                    while i < len(lines) and not lines[i].strip().startswith("## "):
+                        i += 1
+                    continue
+                
+                new_lines.append(lines[i])
+                i += 1
+            
+            # Write updated README
+            with open('README.md', 'w', encoding='utf-8') as f:
+                f.write('\n'.join(new_lines))
+            
+            print(f"✅ README.md updated with latest {len(latest_digests)} digest(s)")
+            
+        except Exception as e:
+            print(f"❌ Error updating README.md: {e}")
+            print("   The digest was still saved successfully")
 
 def main():
     """Main execution function"""
@@ -592,6 +653,9 @@ def main():
         monitor = VibeCodeMonitor(openai_api_key)
         report_content = monitor.run_daily_analysis()
         filename = monitor.save_report(report_content)
+        
+        # Update README with the new digest
+        monitor.update_readme(filename)
         
         print(f"\n🎉 Analysis complete!")
         print(f"📄 Your vibe coding digest is ready: {filename}")
