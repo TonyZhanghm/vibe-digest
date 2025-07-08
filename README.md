@@ -4,10 +4,10 @@ Daily insights on **vibe coding** discussions across Reddit and Hacker News - tr
 
 ## 📅 Recent Digests
 
+- [July 08, 2025](digests/vibe-digest-2025-07-08.md)
 - [July 07, 2025](digests/vibe-digest-2025-07-07.md)
 
-*[View all digests →](https://github.com/tonyzhanghm/vibe-digest/tree/main/digests)*
-
+*[View all digests →](digests/README.md)*
 ## 🎯 What We Track
 
 **Reddit:** r/nocode, r/SideProject, r/indiehackers, r/AppIdeas, r/creativecoding, r/vibecoding, r/ClaudeAI
