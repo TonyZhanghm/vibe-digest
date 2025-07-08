@@ -573,65 +573,75 @@ Respond ONLY with the JSON object."""
         print(f"\n✅ Report saved to: {filename}")
         return filename
     
-    def update_readme(self, new_digest_filename: str) -> None:
-        """Update README.md with the latest 3 digest links"""
+    def update_readmes(self, new_digest_filename: str) -> None:
+        """Update README.md and digests/README.md with digest links"""
         try:
             import glob
-            
-            # Get all existing digest files
-            digest_files = glob.glob("digests/vibe-digest-*.md")
-            digest_files.sort(reverse=True)  # Most recent first
-            
-            # Take the latest 3 (including the new one)
-            latest_digests = digest_files[:3]
-            
-            # Read current README
+            from collections import defaultdict
+
+            # Get all existing digest files, sorted most recent first
+            digest_files = sorted(glob.glob("digests/vibe-digest-*.md"), reverse=True)
+
+            # === Update main README.md (Full list) ===
             with open('README.md', 'r', encoding='utf-8') as f:
                 readme_content = f.read()
-            
-            # Build the new Recent Digests section
+
             digest_lines = []
-            for digest_file in latest_digests:
-                # Extract date from filename
+            for digest_file in digest_files:
                 date_part = digest_file.split('vibe-digest-')[1].replace('.md', '')
                 date_obj = datetime.strptime(date_part, '%Y-%m-%d')
                 display_date = date_obj.strftime('%B %d, %Y')
                 digest_lines.append(f"- [{display_date}]({digest_file})")
-            
-            # Replace the Recent Digests section
+
             lines = readme_content.split('\n')
             new_lines = []
             i = 0
-            
             while i < len(lines):
                 if lines[i].strip() == "## 📅 Recent Digests":
-                    new_lines.append(lines[i])  # Keep the header
+                    new_lines.append(lines[i])
                     new_lines.append("")
-                    
-                    # Add the latest digest links
-                    for digest_line in digest_lines:
-                        new_lines.append(digest_line)
-                    
+                    new_lines.extend(digest_lines)
                     new_lines.append("")
-                    new_lines.append("*[View all digests →](https://github.com/tonyzhanghm/vibe-digest/tree/main/digests)*")
-                    
-                    # Skip until we find the next section
+                    new_lines.append("*[View all digests →](digests/README.md)*")
+
                     i += 1
                     while i < len(lines) and not lines[i].strip().startswith("## "):
                         i += 1
                     continue
-                
                 new_lines.append(lines[i])
                 i += 1
-            
-            # Write updated README
+
             with open('README.md', 'w', encoding='utf-8') as f:
                 f.write('\n'.join(new_lines))
-            
-            print(f"✅ README.md updated with latest {len(latest_digests)} digest(s)")
-            
+            print(f"✅ README.md updated with {len(digest_files)} digest(s)")
+
+            # === Update digests/README.md (Full, organized list) ===
+            digests_by_date = defaultdict(lambda: defaultdict(list))
+            for digest_file in digest_files:
+                date_part = digest_file.split('vibe-digest-')[1].replace('.md', '')
+                date_obj = datetime.strptime(date_part, '%Y-%m-%d')
+                digests_by_date[date_obj.year][date_obj.strftime('%B')].append(digest_file)
+
+            digests_readme_content = "# Vibe Digest Archive\n\nThis folder contains all the daily vibe digests, organized by date.\n\n"
+
+            for year in sorted(digests_by_date.keys(), reverse=True):
+                digests_readme_content += f"## {year}\n\n"
+                for month in sorted(digests_by_date[year].keys(), key=lambda m: datetime.strptime(m, '%B').month, reverse=True):
+                    digests_readme_content += f"### {month}\n\n"
+                    for digest_file in sorted(digests_by_date[year][month], reverse=True):
+                        filename_only = os.path.basename(digest_file)
+                        date_part = filename_only.split('vibe-digest-')[1].replace('.md', '')
+                        date_obj = datetime.strptime(date_part, '%Y-%m-%d')
+                        display_date = date_obj.strftime('%B %d, %Y')
+                        digests_readme_content += f"- [{display_date}](./{filename_only})\n"
+                    digests_readme_content += "\n"
+
+            with open('digests/README.md', 'w', encoding='utf-8') as f:
+                f.write(digests_readme_content)
+            print(f"✅ digests/README.md updated with {len(digest_files)} total digests.")
+
         except Exception as e:
-            print(f"❌ Error updating README.md: {e}")
+            print(f"❌ Error updating README files: {e}")
             print("   The digest was still saved successfully")
 
 def main():
@@ -654,8 +664,8 @@ def main():
         report_content = monitor.run_daily_analysis()
         filename = monitor.save_report(report_content)
         
-        # Update README with the new digest
-        monitor.update_readme(filename)
+        # Update READMEs with the new digest
+        monitor.update_readmes(filename)
         
         print(f"\n🎉 Analysis complete!")
         print(f"📄 Your vibe coding digest is ready: {filename}")
