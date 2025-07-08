@@ -544,10 +544,12 @@ Respond ONLY with the JSON object."""
                     for comment in analysis['top_comments'][:2]:
                         if post.get('source') == 'hackernews':
                             # HN comments have 'text' and 'by' fields
-                            report += f"> *{comment.get('text', '')}* - {comment.get('by', 'anonymous')} ({comment.get('score', 0)}↑)\n\n"
+                            comment_text = comment.get('text', '').replace('\n', '\n> ')
+                            report += f"> *{comment_text}* - {comment.get('by', 'anonymous')} ({comment.get('score', 0)}↑)\n\n"
                         else:
                             # Reddit comments have 'body' and 'author' fields
-                            report += f"> *{comment.get('body', '')}* - u/{comment.get('author', 'anonymous')} ({comment.get('score', 0)}↑)\n\n"
+                            comment_body = comment.get('body', '').replace('\n', '\n> ')
+                            report += f"> *{comment_body}* - u/{comment.get('author', 'anonymous')} ({comment.get('score', 0)}↑)\n\n"
                 
                 # Link handling - HN posts might have external URLs
                 main_link = post['url']
