@@ -4,6 +4,7 @@ Daily insights on **vibe coding** discussions across Reddit and Hacker News - tr
 
 ## 📅 Recent Digests
 
+- [July 13, 2025](digests/vibe-digest-2025-07-13.md)
 - [July 12, 2025](digests/vibe-digest-2025-07-12.md)
 - [July 10, 2025](digests/vibe-digest-2025-07-10.md)
 - [July 09, 2025](digests/vibe-digest-2025-07-09.md)
