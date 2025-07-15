@@ -584,16 +584,17 @@ Respond ONLY with the JSON object."""
             # Get all existing digest files, sorted most recent first
             digest_files = sorted(glob.glob("digests/vibe-digest-*.md"), reverse=True)
 
-            # === Update main README.md (Full list) ===
+            # === Update main README.md (Only top 3) ===
             with open('README.md', 'r', encoding='utf-8') as f:
                 readme_content = f.read()
 
-            digest_lines = []
-            for digest_file in digest_files:
+            # Create digest lines for the main README (top 3)
+            recent_digest_lines = []
+            for digest_file in digest_files[:3]: # Limit to the 3 most recent
                 date_part = digest_file.split('vibe-digest-')[1].replace('.md', '')
                 date_obj = datetime.strptime(date_part, '%Y-%m-%d')
                 display_date = date_obj.strftime('%B %d, %Y')
-                digest_lines.append(f"- [{display_date}]({digest_file})")
+                recent_digest_lines.append(f"- [{display_date}]({digest_file})")
 
             lines = readme_content.split('\n')
             new_lines = []
@@ -602,11 +603,12 @@ Respond ONLY with the JSON object."""
                 if lines[i].strip() == "## 📅 Recent Digests":
                     new_lines.append(lines[i])
                     new_lines.append("")
-                    new_lines.extend(digest_lines)
+                    new_lines.extend(recent_digest_lines) # Use the limited list
                     new_lines.append("")
                     new_lines.append("*[View all digests →](digests/README.md)*")
 
                     i += 1
+                    # Skip old digest lines until the next section
                     while i < len(lines) and not lines[i].strip().startswith("## "):
                         i += 1
                     continue
@@ -615,11 +617,11 @@ Respond ONLY with the JSON object."""
 
             with open('README.md', 'w', encoding='utf-8') as f:
                 f.write('\n'.join(new_lines))
-            print(f"✅ README.md updated with {len(digest_files)} digest(s)")
+            print(f"✅ README.md updated with the latest {len(recent_digest_lines)} digest(s).")
 
             # === Update digests/README.md (Full, organized list) ===
             digests_by_date = defaultdict(lambda: defaultdict(list))
-            for digest_file in digest_files:
+            for digest_file in digest_files: # Use the full list here
                 date_part = digest_file.split('vibe-digest-')[1].replace('.md', '')
                 date_obj = datetime.strptime(date_part, '%Y-%m-%d')
                 digests_by_date[date_obj.year][date_obj.strftime('%B')].append(digest_file)
