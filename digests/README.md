@@ -6,6 +6,7 @@ This folder contains all the daily vibe digests, organized by date.
 
 ### July
 
+- [July 22, 2025](./vibe-digest-2025-07-22.md)
 - [July 21, 2025](./vibe-digest-2025-07-21.md)
 - [July 18, 2025](./vibe-digest-2025-07-18.md)
 - [July 16, 2025](./vibe-digest-2025-07-16.md)
