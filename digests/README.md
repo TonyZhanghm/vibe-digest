@@ -4,8 +4,15 @@ This folder contains all the daily vibe digests, organized by date.
 
 ## 2025
 
+### August
+
+- [August 03, 2025](./vibe-digest-2025-08-03.md)
+- [August 02, 2025](./vibe-digest-2025-08-02.md)
+- [August 01, 2025](./vibe-digest-2025-08-01.md)
+
 ### July
 
+- [July 28, 2025](./vibe-digest-2025-07-28.md)
 - [July 27, 2025](./vibe-digest-2025-07-27.md)
 - [July 23, 2025](./vibe-digest-2025-07-23.md)
 - [July 22, 2025](./vibe-digest-2025-07-22.md)
